@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Dashboard</title>
+        <link rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
+            integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I"
+            crossorigin="anonymous">
+    </head>
+    <body>
+        <nav class="navbar navbar-light bg-light justify-content-between p-2">
+            <span class="navbar-brand mb-0 h1">Coding Dojo Wall</span>
+            <h4>Welcome {{ user.first_name }}</h4>
+            <a href="/logout" class="btn btn-primary">Logout</a>
+        </nav>
+        <form action="/posts/create" method="post" class="form-control">
+            <input type="hidden" name="posts" value={{session.user_id}}>
+            <label for="posts" class="my-5 ml-3 font-italic"> What's on your
+                mind? Create a new post:</label>
+            {% with messages = get_flashed_messages() %} <!-- declare a variable called messages -->
+            {% if messages %}
+            {% for message in messages %}
+            <p class="error text-danger">{{ message }}</p>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            <textarea class="form-control w-50 ml-3" id="content" col='5'
+                rows="5" name="content"></textarea>
+            <input type="submit" class="btn btn-primary my-2 ml-3"
+                value="Post">
+            <div class="form-group my-2 ml-3 position-relative">
+                <p class="font-italic">All Community Posts</p>
+                {% for one_post in all_posts %}
+                <h6>{{ one_post.user.first_name }} posted {{ one_post.time_span() }}</h6>
+                <a href="/posts_show/{{ one_post.user.id }}">@{{
+                    one_post.user.first_name }}</a>
+                    <p>{{ one_post.content }}</p>
+                    <a href="/destroy/posts/{{ one_post.id }}" class="btn btn-danger my-2">Delete</a>
+                    <hr>
+                {% endfor %}
+            </div>
+        </form>
+    </body>
+</html>
